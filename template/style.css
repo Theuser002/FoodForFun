@@ -59,6 +59,13 @@ h1, h2 {
 
 }
 
+.image-area {
+  border: 2px solid #fff;
+  height: 437px;
+  width: 740px;
+  border-radius: 5px;
+}
+
 .drag-area.active {
   border: 2px solid #fff;
 }
@@ -75,7 +82,7 @@ header {
   padding-top: 10px
 }
 
-.browse {
+.browse, .refresh {
   /* padding: 10px 15px; */
   font-size: 25px;
   font-weight: 500;
@@ -89,11 +96,32 @@ header {
 
 }
 
-.browse:hover {
+.browse:hover, .refresh:hover {
   color: #c00918
 }
 
-.drag-area img {
+.submit-btn {
+  padding: 10px 15px;
+  font-size: 20px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  color: #fff;
+  background: #fc505e;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  /* color: red; */
+  text-align: center;
+}
+
+.submit-btn:hover {
+
+  background: #fff;
+  color: #f74353;
+}
+
+.drag-area img, .image-area img {
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -118,4 +146,23 @@ header {
 .another-file:hover {
   color: #fff;
   background: #fc505e;
+}
+
+.food-brief {
+  text-align: justify
+}
+
+.food-brief h2 {
+  color: #f74353;
+  text-align: center
+}
+
+.food-brief a {
+  text-decoration: none;
+  color: #f41226
+}
+
+.food-brief a:hover {
+
+  color: #ff283a
 }

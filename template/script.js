@@ -1,5 +1,5 @@
 //selecting all required elements
-const dropArea = document.querySelector(".drag-area"),
+let dropArea = document.querySelector(".drag-area"),
   dragText = document.querySelector("header"),
   button = document.querySelector(".browse"),
   input = document.querySelector("input"),
@@ -9,6 +9,18 @@ const dropArea = document.querySelector(".drag-area"),
 var chooseAnotherImgButton = document.createElement("button")
 chooseAnotherImgButton.classList.add("another-file")
 chooseAnotherImgButton.innerHTML = "Choose another image";
+
+var submitButton = document.createElement("input")
+submitButton.classList.add("submit-btn")
+submitButton.value = "Submit";
+submitButton.type = "submit"
+submitButton.onclick = () => {
+  showResult();
+}
+
+function showResult() {
+  location.replace("result.html")
+}
 
 function insertAfter(referenceNode, newNode) {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
@@ -38,7 +50,7 @@ dropArea.addEventListener("dragover", (event) => {
 //If user leave dragged File from DropArea
 dropArea.addEventListener("dragleave", () => {
   dropArea.classList.remove("active");
-  dragText.textContent = "Drag & Drop to Upload File";
+  // dragText.textContent = "Drag & Drop to Upload File";
 });
 
 //If user drop File on DropArea
@@ -64,11 +76,12 @@ function showFile() {
         input.click(); //if user click on the button then the input also clicked
       }
       insertAfter(h2, chooseAnotherImgButton);
+      insertAfter(dropArea, submitButton);
     }
     fileReader.readAsDataURL(file);
   } else {
-    alert("This is not an Image File!");
+    dragText.innerHTML = "This is not an Image File! <button class='refresh' onClick='window.location.reload();'>Refresh Page</button>";
     dropArea.classList.remove("active");
-    dragText.textContent = "Drag & Drop to Upload File";
+    // dragText.innerHTML = "Drag & Drop to Upload File OR <button class='browse'>Browse File</button>";
   }
 }
