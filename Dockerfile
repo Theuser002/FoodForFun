@@ -1,13 +1,7 @@
-FROM python:3.6
+FROM nvcr.io/nvidia/tensorflow:21.11-tf2-py3
 
-WORKDIR /
-
+WORKDIR /comvis
 COPY requirements.txt .
-
-COPY ./ocr_manga .
-
 RUN pip install --no-cache-dir -r requirements.txt
-
-CMD [ "python", "main.py" ]
-
-EXPOSE 8080
+COPY ./foodforfun/comvis-components/model .
+CMD [ "python3", "model2.py" ]
