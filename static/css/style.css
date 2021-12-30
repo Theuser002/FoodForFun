@@ -52,11 +52,6 @@ h1, h2 {
   align-items: center;
   justify-content: center;
   flex-direction: column; */
-  background: url('images/bg.gif');
-  background-repeat: no-repeat;
-  background-size: 70%;
-  background-position: top 47px right 107px;
-
 }
 
 .image-area {
