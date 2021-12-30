@@ -15,6 +15,8 @@ TEMPLATE_FOLDER = os.path.join(BASE_DIR, 'templates')
 IMAGES_FOLDER = os.path.join(TEMPLATE_FOLDER, 'images')
 STATIC_FOLDER = os.path.join(BASE_DIR, 'static')
 UPLOAD_FOLDER = os.path.join(STATIC_FOLDER, 'uploads')
+CSS_FOLDER = os.path.join(STATIC_FOLDER, 'css')
+JS_FOLDER = os.path.join(STATIC_FOLDER, 'js')
 OUTPUT_FOLDER = os.path.join(STATIC_FOLDER, 'outputs')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -34,6 +36,7 @@ CORS(app)
 # API
 @app.route('/predict', methods=['POST'])
 def predict():
+    print('predict')
     if 'file' not in request.files:
         flash('No file part')
         return redirect(request.url)
@@ -72,6 +75,7 @@ def predict():
 
 @app.route('/', methods=['GET'])
 def upload_file():
+    print('index')
     return render_template('index.html')
 
 
@@ -91,15 +95,15 @@ def generated_file(filename):
 
 @app.route('/css/<filename>')
 def css_file(filename):
-    return send_from_directory(TEMPLATE_FOLDER, filename)
-
+    return send_from_directory(CSS_FOLDER, filename)
 
 @app.route('/js/<filename>')
 def js_file(filename):
-    return send_from_directory(TEMPLATE_FOLDER, filename)
+    return send_from_directory(JS_FOLDER, filename)
+
 @app.route('/images/<filename>')
 def image_file(filename):
-    return send_from_directory(TEMPLATE_FOLDER + "/images", filename)
+    return send_from_directory(STATIC_FOLDER + "/images", filename)
 
 # ------------------ Helper functions --------------------- #
 
