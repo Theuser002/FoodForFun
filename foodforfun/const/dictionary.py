@@ -1,0 +1,23 @@
+dictionary = {
+    "bap-nuong": "Bap nuong",
+    "ca-ri": "Ca ri",
+    "banh-u": "Banh u",
+    "canh-khoai-mo":"Canh khoai mo",
+    "tau-hu":"Tau hu",
+    "hoanh-thanh-nuoc": "Hoanh thanh nuoc",
+    "banh-can": "Banh can",
+    "bot-chien": "Bot chien",
+    "banh-mi-chao": "Banh mi chao",
+    "canh-kho-qua": "Canh kho qua",
+    "goi-ga": "Goi ga",
+    "banh-trang-tron": "Banh trang tron",
+    "thit-kho-trung": "Thit kho trung",
+    "bo-kho"   : "Bo kho",
+    "pha-lau"  : "Pha lau",
+    "banh-tet" : "Banh tet",
+    "ga-nuong" : "Ga nuong",
+    "bo-la-lot": "Bo la lot",
+    "ha-cao"   : "Ha cao",
+    "banh-uot" : "Banh uot",
+    "banh-hoi" : "Banh hoi"
+}
