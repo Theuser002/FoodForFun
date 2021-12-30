@@ -6,23 +6,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Result</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="shortcut icon" href="images/icon.png" type="image/x-icon">
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <link rel="stylesheet" href="{{ url_for('css_file', filename='style.css')}}">
+  <!-- <link rel="shortcut icon" href="images/icon.png" type="image/x-icon"> -->
+  <link rel="shortcut icon" href="{{ url_for('image_file', filename='icon.png')}}" type="image/x-icon">
   <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 
 <body>
   <div class="main">
-    <span class="decor"><img src="images/goi-cuon.png" alt=""><img src="images/bahn-mi.png" alt=""><img
+    <!-- <span class="decor"><img src="images/goi-cuon.png" alt=""><img src="images/bahn-mi.png" alt=""><img
         src="images/pho.png" alt=""><img src="images/fried-spring-rolls.png" alt=""><img src="images/coffee.png"
-        alt=""></span>
+        alt=""></span> -->
+    <span class="decor"><img src="{{ url_for('image_file', filename='goi-cuon.png')}}" alt="">
+      <img src="{{ url_for('image_file', filename='bahn-mi.png')}}" alt="">
+      <img src="{{ url_for('image_file', filename='pho.png')}}" alt="">
+      <img src="{{ url_for('image_file', filename='fried-spring-rolls.png')}}" alt="">
+      <img src="{{ url_for('image_file', filename='coffee.png')}}" alt="">
+    </span>
     <h1><span style="color: #f74353">FoodForFun</span> thinks this image resembles
     </h1>
 
     <div class="container">
 
       <div class="image-area">
-        <img class="upload-img" src="images/banh-mi-chao.jpg" alt="">
+        <img class="upload-img" src="{{ url_for('image_file', filename='images/banh-mi-chao.jpg')}}" alt="">
       </div>
       <br>
       <div class="food-brief" style="width: 698px;">

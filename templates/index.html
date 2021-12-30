@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - youtube.com/codingnepal -->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food For Fun</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <link rel="stylesheet" href="{{ url_for('css_file', filename='style.css')}}">
+  <!-- <link rel="shortcut icon" href="images/icon.png" type="image/x-icon"> -->
+  <link rel="shortcut icon" href="{{ url_for('image_file', filename='icon.png')}}" type="image/x-icon">
+
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</head>
+
+<body>
+  <div class="main">
+    <!-- <span class="decor"><img src="images/goi-cuon.png" alt=""><img src="images/bahn-mi.png" alt=""><img
+        src="images/pho.png" alt=""><img src="images/fried-spring-rolls.png" alt=""><img src="images/coffee.png"
+        alt=""></span> -->
+      <span class="decor"><img src="{{ url_for('image_file', filename='goi-cuon.png')}}" alt="">
+        <img src="{{ url_for('image_file', filename='bahn-mi.png')}}" alt="">
+        <img src="{{ url_for('image_file', filename='pho.png')}}" alt="">
+        <img src="{{ url_for('image_file', filename='fried-spring-rolls.png')}}" alt="">
+        <img src="{{ url_for('image_file', filename='coffee.png')}}" alt="">
+    </span>
+    <h1>Wanna know what that Vietnamese dish is?
+    </h1>
+    <h2><span style="color: #f74353">FoodForFun</span> shall tell you</h2>
+    <div class="container">
+      <div class="drag-area">
+
+        <header>Drag & Drop to Upload File OR <button class="browse">Browse File</button></header>
+
+        <input type="file" hidden>
+      </div>
+
+
+    </div>
+
+
+  </div>
+  <script src="script.js"></script>
+
+</body>
+
+</html>

@@ -10,8 +10,7 @@ class Config:
 
 
 class FoodForFunConfig:
-    CORE_DATA_DIR = '{}/{}/{}'.format(basedir,
-                                      'foodforfun', 'core_data')
+    CORE_DATA_DIR = '{}/{}/{}'.format(basedir, 'foodforfun', 'core_data')
     MODEL_VERSION = 1
 
 
