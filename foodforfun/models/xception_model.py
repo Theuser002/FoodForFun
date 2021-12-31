@@ -21,14 +21,13 @@ from tensorflow.keras.losses import categorical_crossentropy
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 from sklearn.utils import class_weight
 from tqdm import tqdm
-from collections import Counter
 from math import ceil
-from const import dictionary
 
 class Xception:
-    CUR_DIR = os.getcwd()
-    MODEL_PATH = os.path.join(CUR_DIR, "xception/best-model/best_model.h5")
-    model = load_model(MODEL_PATH)
+    def __init__(self):
+        CUR_DIR = os.path.dirname(os.path.abspath(__file__))
+        MODEL_PATH = os.path.join(CUR_DIR, "xception/best-model/best_model.h5")
+        model = load_model(MODEL_PATH)
 
     def prepareImage(image):
         image = cv2.resize(image, (300, 300))
@@ -36,16 +35,15 @@ class Xception:
         image = np.expand_dims(image, axis = 0)
         return image
 
-    def identify(image):
-        with open('image.jpg', 'wb') as handler:
-            handler.write(image)
-        online_image = cv2.imread('image.jpg')
+    def predict(image):
+        # with open('image.jpg', 'wb') as handler:
+        #     handler.write(image)
+        online_image = cv2.imread(image)
         online_image = cv2.cvtColor(online_image, cv2.COLOR_BGR2RGB)
         plt.imshow(online_image)
         online_image = prepareImage(online_image)
-        prediction = model.predict(online_image)
+        prediction = self.model.predict(online_image)
         result = np.argmax(prediction)
         print(result, prediction[0][result])
 
-        identified_class = dictionary['result']
-        return identified_class
+        return result

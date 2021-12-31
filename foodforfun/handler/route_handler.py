@@ -8,7 +8,7 @@ from includes.utils import *
 from const.message import *
 from config import *
 from errors import *
-from model import Xception
+from models.model import Xception
 
 LOGGER = logging.getLogger(__name__)
 
@@ -24,5 +24,5 @@ class RouteHandler:
         image = data['image']
         if image is null:
             
-        identified_class = self.xception_model.identify(data['image'])
-        return success({"status": 200, "identified": identified_class})
+            identified_class = self.xception_model.predict(data['image'])
+            return success({"status": 200, "identified": identified_class})
