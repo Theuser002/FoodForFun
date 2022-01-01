@@ -7,7 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Food For Fun</title>
   <!-- <link rel="stylesheet" href="style.css"> -->
+  <link rel="stylesheet" href="{{ url_for('css_file', filename='adminlte.css')}}">
   <link rel="stylesheet" href="{{ url_for('css_file', filename='style.css')}}">
+
   <!-- <link rel="shortcut icon" href="images/icon.png" type="image/x-icon"> -->
   <link rel="shortcut icon" href="{{ url_for('image_file', filename='icon.png')}}" type="image/x-icon">
 
@@ -15,11 +17,22 @@
 </head>
 
 <style>
-  .drag-area {
+  .drag-area,
+  .link-area {
     background: url("{{ url_for('image_file', filename='bg.gif')}}");
     background-repeat: no-repeat;
     background-size: 70%;
     background-position: top 47px right 107px;
+  }
+
+  .link-area {
+    background-position: top -12px right 107px
+  }
+
+  #imageURLInput {
+    background-image: url("{{ url_for('image_file', filename='searchicon.png')}}");
+    background-position: 633px 7px;
+    background-repeat: no-repeat;
   }
 </style>
 
@@ -40,16 +53,50 @@
     <form id="imageForm" method="post" enctype="multipart/form-data">
 
       <div class="container">
+        <div class="row" style="width:100%; margin-bottom: 12px">
+          <div class=" col-md-4">
+            <div class="custom-control custom-radio">
+              <input class="custom-control-input custom-control-input-danger" type="radio" id="radioBrowse"
+                name="inputType" checked>
+              <label for="radioBrowse" class="custom-control-label" id="labelBrowse">Drop or Browse</label>
+            </div>
+          </div>
+
+          <div class=" col-md-4">
+            <div class="custom-control custom-radio">
+              <input class="custom-control-input custom-control-input-danger" type="radio" id="radioURL"
+                name="inputType">
+              <label for="radioURL" class="custom-control-label" id="labelUrl">From URL</label>
+            </div>
+          </div>
+
+          <div class=" col-md-4">
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input custom-control-input-danger" type="checkbox" id="denoiseCheckbox"
+                name="denoise" disabled value="true">
+              <label for="denoiseCheckbox" class="custom-control-label">Clean noise</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="imageURLDiv" style="display: none; ">
+          <div class="form-group" style="display: flex; align-items: center; justify-content: center; margin-top: 7px">
+            <input type="text" name="" id="imageURLInput" class="form-control"
+              placeholder="Paste Image URL and Press Enter" aria-describedby="helpId" style="width: 90%">
+          </div>
+          <div class="link-area"></div>
+
+        </div>
         <div class="drag-area">
           <header>Drag & Drop to Upload File OR <a class="browse">Browse File</a></header>
         </div>
       </div>
       <input id="input" name="file" type="file" hidden>
+      <input id="imageURL" name="imageURL" type="text" hidden>
     </form>
 
   </div>
   <script src="{{ url_for('js_file', filename='script.js')}}"></script>
-
 
 </body>
 

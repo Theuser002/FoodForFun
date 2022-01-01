@@ -1,23 +1,69 @@
 //selecting all required elements
-let dropArea = document.querySelector(".drag-area"),
+var dropArea = document.querySelector(".drag-area"),
     dragText = document.querySelector("header"),
     button = document.querySelector(".browse"),
     input = document.querySelector("#input"),
     upload = dropArea.querySelector(".upload-img"),
     h2 = document.querySelector("h2"),
+    labelBrowse = document.querySelector("#labelBrowse"),
+    labelUrl = document.querySelector("#labelUrl"),
+    imageURL = document.querySelector("#imageURL"),
+    imageURLDiv = document.querySelector(".imageURLDiv"),
+    imageURLInput = document.querySelector("#imageURLInput"),
+    linkArea = document.querySelector(".link-area"),
+    row = document.querySelector(".row"),
     form = document.getElementById("imageForm")
 
 var chooseAnotherImgButton = document.createElement("button")
 chooseAnotherImgButton.classList.add("another-file")
 chooseAnotherImgButton.innerHTML = "Choose another image";
 
-var submitButton = document.createElement("input")
+const submitButton = document.createElement("input")
 submitButton.classList.add("submit-btn")
 submitButton.value = "Submit";
 submitButton.type = "submit"
 submitButton.onclick = () => {
     submitImage();
 }
+
+var submitButton2 = document.createElement("input")
+submitButton2.classList.add("submit-btn")
+submitButton2.value = "Submit";
+submitButton2.type = "submit"
+submitButton2.onclick = () => {
+    submitImage();
+}
+
+labelBrowse.onclick = () => {
+    dropArea.style.display = "block";
+    imageURLDiv.style.display = "none";
+    dropArea.classList.remove("active");
+    submitButton.remove();
+    chooseAnotherImgButton.remove();
+    dropArea.innerHTML = "<header>Drag & Drop to Upload File OR <a class='browse'>Browse File</a></header>"
+    document.querySelector(".browse").addEventListener("click", (event) => {
+        event.preventDefault();
+        input.click(); //if user click on the button then the input also clicked
+    });
+}
+
+labelUrl.onclick = () => {
+    dropArea.style.display = "none";
+    imageURLDiv.style.display = "block";
+    submitButton.remove();
+    chooseAnotherImgButton.remove();
+    linkArea.innerHTML = "";
+    imageURLInput.value = ""
+}
+
+
+imageURLInput.addEventListener("keyup", function (event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+        // Cancel the default action, if needed
+        showImageFromURL();
+    }
+});
 
 
 function submitImage() {
@@ -77,14 +123,17 @@ function showFile() {
         let fileReader = new FileReader(); //creating new FileReader object
         fileReader.onload = () => {
             let fileURL = fileReader.result; //passing user file source in fileURL variable
-            let imgTag = `<img class="upload-img" src="${fileURL}" alt="">`; //creating an img tag and passing user selected file source inside src attribute
+            let imgTag = `<img class="upload-img" id="drop-img" src="${fileURL}" alt="">`; //creating an img tag and passing user selected file source inside src attribute
             dropArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
+            imageURL.value = fileURL;
 
             chooseAnotherImgButton.onclick = () => {
                 input.click(); //if user click on the button then the input also clicked
             }
-            insertAfter(h2, chooseAnotherImgButton);
+            insertAfter(row, chooseAnotherImgButton);
             insertAfter(dropArea, submitButton);
+            document.getElementById("denoiseCheckbox").disabled = false
+
         }
         fileReader.readAsDataURL(file);
     } else {
@@ -92,4 +141,12 @@ function showFile() {
         dropArea.classList.remove("active");
         // dragText.innerHTML = "Drag & Drop to Upload File OR <button class='browse'>Browse File</button>";
     }
+}
+
+function showImageFromURL() {
+    insertAfter(dropArea, submitButton);
+    document.getElementById("denoiseCheckbox").disabled = false
+    let imgTag = `<img class="upload-img" id="link-img" src="${imageURLInput.value}" alt="">`; //creating an img tag and passing user selected file source inside src attribute
+    linkArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
+    imageURL.value = imageURLInput.value;
 }

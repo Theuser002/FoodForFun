@@ -9,7 +9,7 @@ from flask_cors import CORS
 # from werkzeug.utils import secure_filename
 
 # Model imports 
-from foodforfun.models.model import Xception
+# from foodforfun.models.model import Xception
 
 # General config
 warnings.filterwarnings("ignore")
@@ -47,7 +47,13 @@ def predict():
         print('No file part')
         return redirect('/')
 
+    # for file
     file = request.files["file"]
+
+    # for drop and url: image url
+    imageURL = request.form.get('imageURL')
+
+    print(imageURL)
     print("Filename: " + file.filename)
     # if user does not select file, browser also submit an empty part without filename
     if file.filename == '':
