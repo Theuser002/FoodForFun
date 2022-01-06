@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - youtube.com/codingnepal -->
 <html lang="en">
 
 <head>
@@ -34,16 +33,12 @@
       </div>
       <br>
       <div class="food-brief" style="width: 698px;">
-        <h2>{{prediction}}</h2>
+        <h2>{{prediction.name}}</h2>
         <p style="margin-bottom: 10px"><em>Read on <a
-              href="https://en.nhandan.vn/travel/gastronomy/item/6905402-banh-mi-chao-a-vietanmese-dish-that-sizzles-in-a-pan.html"
-              target="_blank" rel="noopener noreferrer">Nhan dan</a></em>
+              href="{{prediction.url}}"
+              target="_blank" rel="noopener noreferrer">{{prediction.article}}</a></em>
         </p>
-        <p style="margin-bottom: 10px">Banh mi chao (Bread with combo pan) is a Vietnamese-styled hot alternative to
-          stuffed baguettes.
-
-          Bread is served in a frying pan with eggs, pate and sausage. But this is just the basic version. A wide
-          variety of "fillings" are available for hungry diners to choose from.
+        <p style="margin-bottom: 10px">{{prediction.brief}}
         </p>
         <p><span style="font-weight: bolder">Accruracy: </span><span>80%</span></p>
       </div>
