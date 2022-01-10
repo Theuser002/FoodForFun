@@ -55,10 +55,13 @@ def predict():
 
     print(imageURL)
     print("Filename: " + file.filename)
+    print("Args")
+    print(request.args)
     # if user does not select file, browser also submit an empty part without filename
     if file.filename == '':
         print('No selected file')
-        return redirect('/')
+        file.filename == 'default.jpg'
+        # return redirect('/')
         
     if file and allowed_file(file.filename):
         # Save uploaded file
