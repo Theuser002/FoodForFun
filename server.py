@@ -74,6 +74,8 @@ def predict():
         file = requests.get(image_url)
         if file.status_code == 200:
             filepath = os.path.join(UPLOAD_FOLDER, 'online_image.jpg')
+            if os.path.isfile(filepath):
+                os.remove(filepath)
             with open(filepath, 'wb') as handler:
                 handler.write(file.content)
                 result = model.predict(filepath)
