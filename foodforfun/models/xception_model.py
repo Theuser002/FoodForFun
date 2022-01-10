@@ -6,7 +6,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import sklearn
-import requests
 
 from sklearn.preprocessing import OneHotEncoder
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -21,29 +20,33 @@ from tensorflow.keras.losses import categorical_crossentropy
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 from sklearn.utils import class_weight
 from tqdm import tqdm
+from collections import Counter
 from math import ceil
 
-class Xception:
+IMAGE_SHAPE = (300, 300)
+N_CHANNELS = 3
+
+n_classes = 22
+
+class Xception_2():
+    
     def __init__(self):
-        CUR_DIR = os.path.dirname(os.path.abspath(__file__))
-        MODEL_PATH = os.path.join(CUR_DIR, "xception/best-model/best_model.h5")
-        model = load_model(MODEL_PATH)
+        # Load the pre-trained model
+        self.pretrained_nn = Xception(input_shape = (IMAGE_SHAPE[0], IMAGE_SHAPE[1], N_CHANNELS), weights = 'imagenet', include_top=False) # [1] 
+        # Define network architecture
+        self.feature_logits = Flatten()(self.pretrained_nn.output)
+        self.last_output = self.pretrained_nn.output
+        x = GlobalAveragePooling2D()(self.last_output)
+        x = Dense(512, activation='relu')(x)
+        x = Dropout(0.2)(x)
+        self.outputs = Dense(n_classes, activation='softmax')(x)
+        self.model = Model(inputs=self.pretrained_nn.input, outputs=self.outputs)
 
-    def prepareImage(image):
-        image = cv2.resize(image, (300, 300))
-        image = image/255.
-        image = np.expand_dims(image, axis = 0)
-        return image
+        self.model = self.model.compile(
+                        loss = 'categorical_crossentropy',
+                        optimizer = 'rmsprop',
+                        metrics = ['accuracy']
+                    )
 
-    def predict(image):
-        # with open('image.jpg', 'wb') as handler:
-        #     handler.write(image)
-        online_image = cv2.imread(image)
-        online_image = cv2.cvtColor(online_image, cv2.COLOR_BGR2RGB)
-        plt.imshow(online_image)
-        online_image = prepareImage(online_image)
-        prediction = self.model.predict(online_image)
-        result = np.argmax(prediction)
-        print(result, prediction[0][result])
-
-        return result
+    def get_model(self):
+        return self.model

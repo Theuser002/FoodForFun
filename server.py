@@ -1,5 +1,8 @@
 import os
 import warnings
+import requests
+import numpy as np
+
 from datetime import datetime
 from foodforfun.const.dictionary import dictionary
 
@@ -9,7 +12,7 @@ from flask_cors import CORS
 # from werkzeug.utils import secure_filename
 
 # Model imports 
-# from foodforfun.models.model import Xception
+from foodforfun.models.model import Xception
 
 # General config
 warnings.filterwarnings("ignore")
@@ -49,20 +52,36 @@ def predict():
 
     # for file
     file = request.files["file"]
-
     # for drop and url: image url
-    imageURL = request.form.get('imageURL')
+    image_url = request.form.get('imageURL')
+    # for denoise image
+    isDenoise = request.form.get('denoiseCheckBox')
 
-    print(imageURL)
+
+    print(image_url)
     print("Filename: " + file.filename)
     print("Args")
     print(request.args)
+    
     # if user does not select file, browser also submit an empty part without filename
     if file.filename == '':
         print('No selected file')
-        file.filename == 'default.jpg'
+        # file.filename == 'default.jpg'
         # return redirect('/')
-        
+
+    # if image_url not null
+    if image_url != '' and file.filename == '' :
+        file = requests.get(image_url)
+        if file.status_code == 200:
+            filepath = os.path.join(UPLOAD_FOLDER, 'online_image.jpg')
+            with open(filepath, 'wb') as handler:
+                handler.write(file.content)
+                result = model.predict(filepath)
+                input_url = url_for('uploaded_file', filename="online_image.jpg")
+                # return render_template('result.html', image=input_url, prediction=dictionary[result])
+                return render_template('result.html', image=input_url, prediction=dictionary[result])
+
+    # Save and predict image
     if file and allowed_file(file.filename):
         # Save uploaded file
         print("Save uploaded file")
@@ -70,11 +89,11 @@ def predict():
         filepath = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(filepath)
 		# Predict
-	    
         result = model.predict(filepath)
+        accuracy = np.argmax(result)
         input_url = url_for('uploaded_file', filename=file.filename)
         # return render_template('result.html', image=input_url, prediction=dictionary[result])
-        return render_template('result.html', image=input_url, prediction=dictionary[result])
+        return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=accuracy)
 
     flash('Invalid')
     return redirect('/')
@@ -88,6 +107,10 @@ def upload_file():
 @app.route('/results', methods=['GET'])
 def show_results():
     return render_template('result.html')
+
+@app.route('/test', methods=['GET'])
+def test():
+    return render_template('test.html')
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

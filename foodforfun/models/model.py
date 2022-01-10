@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import os
 import sklearn
 import requests
+from foodforfun.models.xception_model import Xception_2
 
 from sklearn.preprocessing import OneHotEncoder
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -28,6 +29,8 @@ class Xception:
         self.CUR_DIR = os.path.dirname(os.path.abspath(__file__))
         self.MODEL_PATH = os.path.join(self.CUR_DIR, "xception/best-model/best_model.h5")
         self.model = load_model(self.MODEL_PATH)
+        # self.model = Xception_2().model
+        # self.model.load_weights(self.MODEL_PATH)
 
     def prepareImage(self, image):
         image = cv2.resize(image, (300, 300))
