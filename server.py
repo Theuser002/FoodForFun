@@ -40,6 +40,7 @@ CORS(app)
 
 # Model config
 model = Xception()
+count = 0
 
 # API
 @app.route('/predict', methods=['POST'])
@@ -73,13 +74,18 @@ def predict():
     if image_url != '' and file.filename == '' :
         file = requests.get(image_url)
         if file.status_code == 200:
-            filepath = os.path.join(UPLOAD_FOLDER, 'online_image.jpg')
+            global count
+            count = count + 1
+            image_name = "online_image" + str(count) + ".jpg"
+            filepath = os.path.join(UPLOAD_FOLDER, image_name)
             if os.path.isfile(filepath):
                 os.remove(filepath)
             with open(filepath, 'wb') as handler:
                 handler.write(file.content)
+
+                
                 result = model.predict(filepath)
-                input_url = url_for('uploaded_file', filename="online_image.jpg")
+                input_url = url_for('uploaded_file', filename=image_name)
                 # return render_template('result.html', image=input_url, prediction=dictionary[result])
                 return render_template('result.html', image=input_url, prediction=dictionary[result])
 
