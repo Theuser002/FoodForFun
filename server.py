@@ -12,7 +12,7 @@ from flask_cors import CORS
 # from werkzeug.utils import secure_filename
 
 # Model imports 
-from foodforfun.models.model import Xception
+from foodforfun.models.xception import Xception
 
 # General config
 warnings.filterwarnings("ignore")
@@ -58,11 +58,6 @@ def predict():
     # for denoise image
     isDenoise = request.form.get('denoiseCheckBox')
 
-
-    print(image_url)
-    print("Filename: " + file.filename)
-    print("Args")
-    print(request.args)
     
     # if user does not select file, browser also submit an empty part without filename
     if file.filename == '':
