@@ -14,6 +14,7 @@ from flask_cors import CORS
 
 # Model imports 
 from foodforfun.models.xception import Xception
+from foodforfun.models.mobilenet import MobileNet
 from foodforfun.models.denoise import Denoise
 from foodforfun.const.count import Count
 
@@ -42,7 +43,8 @@ app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 CORS(app)
 
 # Model config
-model = Xception()
+xception = Xception()
+mobilenet = MobileNet()
 autoencoder = Denoise()
 count = Count()
 
@@ -61,6 +63,7 @@ def predict():
     image_url = request.form.get('imageURL')
     # for denoise image
     isDenoise = request.form.get('denoise')
+    chosen_model = request.form.get('model')
     # isDenoise = request.form['denoiseCheckbox']
     print("Denoise:\n-- ")
     print(isDenoise)
@@ -93,7 +96,14 @@ def predict():
                 cv2.imwrite(clean_filepath, clean_img)
                 filepath = clean_filepath
                 image_name = clean_filename
-            result, accuracy = model.predict(filepath)
+
+            result = "1"
+            accuracy = 0
+            if chosen_model == 'Xception':
+                result, accuracy = xception.predict(filepath)
+            elif chosen_model == 'MobileNetV2': 
+                result, accuracy = mobilenet.predict(filepath)
+
             input_url = url_for('uploaded_file', filename=image_name)
             # return render_template('result.html', image=input_url, prediction=dictionary[result])
             return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=str(round(accuracy*100, 2)))
@@ -120,7 +130,12 @@ def predict():
             file.filename = clean_filename
             filepath = clean_filepath
 		# Predict
-        result, accuracy = model.predict(filepath)
+        result = "1"
+        accuracy = 0
+        if chosen_model == 'Xception':
+            result, accuracy = xception.predict(filepath)
+        elif chosen_model == 'MobileNetV2': 
+            result, accuracy = mobilenet.predict(filepath)
         input_url = url_for('uploaded_file', filename=file.filename)
         # return render_template('result.html', image=input_url, prediction=dictionary[result])
         return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=str(round(accuracy*100, 2)))
