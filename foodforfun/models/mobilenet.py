@@ -26,11 +26,11 @@ from math import ceil
 class MobileNet:
     def __init__(self):
         self.CUR_DIR = os.path.dirname(os.path.abspath(__file__))
-        self.MODEL_PATH = os.path.join(self.CUR_DIR, "mobilenet/best-model/best_model.h5")
+        self.MODEL_PATH = os.path.join(self.CUR_DIR, "mobilenet/best-model/comb_best_model.h5")
         self.model = load_model(self.MODEL_PATH)
     
     def prepareImage(self, image):
-        image = cv2.resize(image, (300, 300))
+        image = cv2.resize(image, (224, 224))
         image = image/255.
         image = np.expand_dims(image, axis = 0)
         return image
