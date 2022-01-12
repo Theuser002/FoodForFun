@@ -96,7 +96,7 @@ def predict():
             result, accuracy = model.predict(filepath)
             input_url = url_for('uploaded_file', filename=image_name)
             # return render_template('result.html', image=input_url, prediction=dictionary[result])
-            return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=accuracy*100)
+            return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=str(round(accuracy*100, 2)))
 
     # Save and predict image
     if file and allowed_file(file.filename):
@@ -123,7 +123,7 @@ def predict():
         result, accuracy = model.predict(filepath)
         input_url = url_for('uploaded_file', filename=file.filename)
         # return render_template('result.html', image=input_url, prediction=dictionary[result])
-        return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=accuracy*100)
+        return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=str(round(accuracy*100, 2)))
 
     if file.filename == '' and image_url == '':
         print('No selected file')
