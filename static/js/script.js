@@ -58,7 +58,7 @@ labelBrowse.onclick = () => {
     dropArea.style.display = "block";
     imageURLDiv.style.display = "none";
     dropArea.classList.remove("active");
-    submitButton.remove();
+    submitDiv.remove();
     chooseAnotherImgButton.remove();
     dropArea.innerHTML = "<header>Drag & Drop to Upload File OR <a class='browse'>Browse File</a></header>"
     document.querySelector(".browse").addEventListener("click", (event) => {
@@ -70,7 +70,7 @@ labelBrowse.onclick = () => {
 labelUrl.onclick = () => {
     dropArea.style.display = "none";
     imageURLDiv.style.display = "block";
-    submitButton.remove();
+    submitDiv.remove();
     chooseAnotherImgButton.remove();
     linkArea.innerHTML = "";
     imageURLInput.value = ""
