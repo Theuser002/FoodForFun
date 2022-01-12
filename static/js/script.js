@@ -33,6 +33,26 @@ submitButton2.type = "submit"
 submitButton2.onclick = () => {
     submitImage();
 }
+var array = ["Xception", "MobileNetV2"];
+
+const submitDiv = document.createElement("div")
+submitDiv.classList.add("d-flex")
+
+const selectModel = document.createElement("select")
+selectModel.classList.add("form-control")
+selectModel.name = "model"
+selectModel.id = "model"
+
+//Create and append the options
+for (var i = 0; i < array.length; i++) {
+    var option = document.createElement("option");
+    option.value = array[i];
+    option.text = array[i];
+    selectModel.appendChild(option);
+}
+
+submitDiv.appendChild(selectModel)
+submitDiv.appendChild(submitButton)
 
 labelBrowse.onclick = () => {
     dropArea.style.display = "block";
@@ -131,7 +151,7 @@ function showFile() {
                 input.click(); //if user click on the button then the input also clicked
             }
             insertAfter(row, chooseAnotherImgButton);
-            insertAfter(dropArea, submitButton);
+            insertAfter(dropArea, submitDiv);
             document.getElementById("denoiseCheckbox").disabled = false
 
         }
@@ -144,7 +164,7 @@ function showFile() {
 }
 
 function showImageFromURL() {
-    insertAfter(dropArea, submitButton);
+    insertAfter(dropArea, submitDiv);
     document.getElementById("denoiseCheckbox").disabled = false
     let imgTag = `<img class="upload-img" id="link-img" src="${imageURLInput.value}" alt="">`; //creating an img tag and passing user selected file source inside src attribute
     linkArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
