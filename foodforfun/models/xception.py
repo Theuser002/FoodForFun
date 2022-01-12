@@ -25,25 +25,25 @@ from math import ceil
 
 class Xception:
     def __init__(self):
-        CUR_DIR = os.path.dirname(os.path.abspath(__file__))
-        MODEL_PATH = os.path.join(CUR_DIR, "xception/best-model/best_model.h5")
-        model = load_model(MODEL_PATH)
+        self.CUR_DIR = os.path.dirname(os.path.abspath(__file__))
+        self.MODEL_PATH = os.path.join(self.CUR_DIR, "xception/best-model/best_model.h5")
+        self.model = load_model(self.MODEL_PATH)
 
-    def prepareImage(image):
+    def prepareImage(self, image):
         image = cv2.resize(image, (300, 300))
         image = image/255.
         image = np.expand_dims(image, axis = 0)
         return image
 
-    def predict(image):
+    def predict(self, image_path):
         # with open('image.jpg', 'wb') as handler:
         #     handler.write(image)
-        online_image = cv2.imread(image)
+        online_image = cv2.imread(image_path)
         online_image = cv2.cvtColor(online_image, cv2.COLOR_BGR2RGB)
         plt.imshow(online_image)
-        online_image = prepareImage(online_image)
+        online_image = self.prepareImage(online_image)
         prediction = self.model.predict(online_image)
         result = np.argmax(prediction)
-        print(result, prediction[0][result])
+        accuracy = prediction[0][result]
 
-        return result
+        return result, accuracy

@@ -1,5 +1,9 @@
 import os
 import warnings
+import requests
+import numpy as np
+import cv2
+
 from datetime import datetime
 from foodforfun.const.dictionary import dictionary
 
@@ -9,7 +13,9 @@ from flask_cors import CORS
 # from werkzeug.utils import secure_filename
 
 # Model imports 
-# from foodforfun.models.model import Xception
+from foodforfun.models.xception import Xception
+from foodforfun.models.denoise import Denoise
+from foodforfun.const.count import Count
 
 # General config
 warnings.filterwarnings("ignore")
@@ -37,6 +43,8 @@ CORS(app)
 
 # Model config
 model = Xception()
+autoencoder = Denoise()
+count = Count()
 
 # API
 @app.route('/predict', methods=['POST'])
@@ -49,32 +57,77 @@ def predict():
 
     # for file
     file = request.files["file"]
-
     # for drop and url: image url
-    imageURL = request.form.get('imageURL')
-
-    print(imageURL)
-    print("Filename: " + file.filename)
-    print("Args")
-    print(request.args)
+    image_url = request.form.get('imageURL')
+    # for denoise image
+    isDenoise = request.form.get('denoise')
+    # isDenoise = request.form['denoiseCheckbox']
+    print("Denoise:\n-- ")
+    print(isDenoise)
+    
     # if user does not select file, browser also submit an empty part without filename
-    if file.filename == '':
-        print('No selected file')
-        file.filename == 'default.jpg'
-        # return redirect('/')
-        
+    
+
+    # if image_url not null
+    if image_url != '' and file.filename == '' :
+        file = requests.get(image_url)
+        if file.status_code == 200:
+            
+            cnt = count.increment_count()
+            image_name = "online_image" + str(cnt) + ".jpg"
+            filepath = os.path.join(UPLOAD_FOLDER, image_name)
+            if os.path.isfile(filepath):
+                os.remove(filepath)
+            with open(filepath, 'wb') as handler:
+                img = file.content
+                handler.write(img)
+                
+            if isDenoise == 'true':
+                img = cv2.imread(filepath)
+                # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                clean_img = autoencoder.clean_image(img)
+                # clean_img = cv2.cvtColor(clean_img, cv2.COLOR_BGR2RGB)
+                cnt_cln = count.increment_count_clean()
+                clean_filename = "cleaned_image" + str(cnt_cln) + ".jpg"
+                clean_filepath = os.path.join(UPLOAD_FOLDER, clean_filename)
+                cv2.imwrite(clean_filepath, clean_img)
+                filepath = clean_filepath
+                image_name = clean_filename
+            result, accuracy = model.predict(filepath)
+            input_url = url_for('uploaded_file', filename=image_name)
+            # return render_template('result.html', image=input_url, prediction=dictionary[result])
+            return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=accuracy*100)
+
+    # Save and predict image
     if file and allowed_file(file.filename):
         # Save uploaded file
         print("Save uploaded file")
 
-        filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, file.filename)  
         file.save(filepath)
+        if isDenoise == 'true':
+            cnt_cln = count.increment_count_clean()
+            img = cv2.imread(filepath)
+            # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            clean_img = autoencoder.clean_image(img)
+            # clean_img = cv2.cvtColor(clean_img, cv2.COLOR_BGR2RGB)
+
+            clean_filename = "cleaned_image" + str(cnt_cln) + ".jpg"
+            clean_filepath = os.path.join(UPLOAD_FOLDER, clean_filename)
+            # with open(clean_filepath, 'wb') as handler:
+            #     handler.write(clean_img)
+            cv2.imwrite(clean_filepath, clean_img)
+            file.filename = clean_filename
+            filepath = clean_filepath
 		# Predict
-	    
-        result = model.predict(filepath)
+        result, accuracy = model.predict(filepath)
         input_url = url_for('uploaded_file', filename=file.filename)
         # return render_template('result.html', image=input_url, prediction=dictionary[result])
-        return render_template('result.html', image=input_url, prediction=dictionary[result])
+        return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=accuracy*100)
+
+    if file.filename == '' and image_url == '':
+        print('No selected file')
+        render_template('index.html')
 
     flash('Invalid')
     return redirect('/')
@@ -88,6 +141,10 @@ def upload_file():
 @app.route('/results', methods=['GET'])
 def show_results():
     return render_template('result.html')
+
+@app.route('/test', methods=['GET'])
+def test():
+    return render_template('test.html')
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

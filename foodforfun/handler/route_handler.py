@@ -8,7 +8,7 @@ from includes.utils import *
 from const.message import *
 from config import *
 from errors import *
-from models.model import Xception
+from foodforfun.models.xception import Xception
 
 LOGGER = logging.getLogger(__name__)
 
