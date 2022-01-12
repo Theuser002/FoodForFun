@@ -2,6 +2,7 @@ import os
 import warnings
 import requests
 import numpy as np
+import cv2
 
 from datetime import datetime
 from foodforfun.const.dictionary import dictionary
@@ -13,6 +14,7 @@ from flask_cors import CORS
 
 # Model imports 
 from foodforfun.models.xception import Xception
+from foodforfun.models.denoise import clean_image
 
 # General config
 warnings.filterwarnings("ignore")
@@ -41,6 +43,7 @@ CORS(app)
 # Model config
 model = Xception()
 count = 0
+count_clean = 0
 
 # API
 @app.route('/predict', methods=['POST'])
@@ -56,8 +59,10 @@ def predict():
     # for drop and url: image url
     image_url = request.form.get('imageURL')
     # for denoise image
-    isDenoise = request.form.get('denoiseCheckBox')
-
+    isDenoise = request.form.get('denoiseCheckbox')
+    # isDenoise = request.form['denoiseCheckbox']
+    print("Denoise:\n-- ")
+    print(isDenoise)
     
     # if user does not select file, browser also submit an empty part without filename
     if file.filename == '':
@@ -76,27 +81,42 @@ def predict():
             if os.path.isfile(filepath):
                 os.remove(filepath)
             with open(filepath, 'wb') as handler:
-                handler.write(file.content)
+                img = file.content
+                if isDenoise == 'true':
+                    print("isDenoise is true")
+                    img = clean_image(img)
+                handler.write(img)
 
-                
                 result = model.predict(filepath)
                 input_url = url_for('uploaded_file', filename=image_name)
                 # return render_template('result.html', image=input_url, prediction=dictionary[result])
-                return render_template('result.html', image=input_url, prediction=dictionary[result])
+                return render_template('result.html', image=input_url, prediction=dictionary[result], isDenoise=isDenoise)
 
     # Save and predict image
     if file and allowed_file(file.filename):
         # Save uploaded file
         print("Save uploaded file")
 
-        filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, file.filename)  
         file.save(filepath)
+        if isDenoise == 'true':
+            print("Denoise is true")
+            # global count_clean
+            count_clean += 1
+            # img = cv2.imread(filepath)
+            clean_img = clean_image(img)
+            cv2.imshow(clean_image)
+            clean_filename = "cleaned_image" + str(count_clean) + ".jpg"
+            clean_filepath = os.path.join(UPLOAD_FOLDER, clean_filename)
+            with open(clean_filepath, 'wb') as handler:
+                handler.write(clean_img)
+            filepath = clean_filepath
 		# Predict
         result = model.predict(filepath)
         accuracy = np.argmax(result)
         input_url = url_for('uploaded_file', filename=file.filename)
         # return render_template('result.html', image=input_url, prediction=dictionary[result])
-        return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=accuracy)
+        return render_template('result.html', image=input_url, prediction=dictionary[result], accuracy=accuracy, isDenoise=isDenoise)
 
     flash('Invalid')
     return redirect('/')
