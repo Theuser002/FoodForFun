@@ -47,5 +47,3 @@ class Autoencoder (nn.Module):
         x = self.decoder(x)
         x = torch.sigmoid(x)
         return x
-
-    

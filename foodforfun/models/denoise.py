@@ -46,6 +46,7 @@ def clean (model, noised_img, transform):
     model.eval()
     img_height, img_width, img_channels = noised_img.shape
     
+    noised_img = noised_img.astype('float32')/255.
     restore_transform = A.Compose([
         A.Resize(height = img_height, width = img_width)
     ])
@@ -59,9 +60,9 @@ def clean (model, noised_img, transform):
     torch_noised_img = torch_noised_img.to(device)
 
     with torch.no_grad():
-        # torch_noised_img = torch_noised_img.float()
+        
         output_img = model(torch_noised_img)
-    output_img = restore_transform(image=output_img)['image']
+    # output_img = restore_transform(image=output_img)['image']
     output_img = output_img.cpu().squeeze().numpy()
     output_img = output_img.transpose(1, 2, 0)
     return output_img

@@ -44,6 +44,6 @@ class Xception:
         online_image = self.prepareImage(online_image)
         prediction = self.model.predict(online_image)
         result = np.argmax(prediction)
-        print(result, prediction[0][result])
+        accuracy = prediction[0][result]
 
-        return result
+        return result, accuracy
