@@ -15,6 +15,8 @@
 
 Vietnamese Food Recoginition is a website that helps people from all over the world classify the type of food from their input image. 
 
+Link demo: https://drive.google.com/file/d/1Dp1-BbKRL5k3pwYaDKtEI0wRJdnPTqvY/view
+
 To build this project, we use Flask micro-framework.
 
 This project follows the below structure:
